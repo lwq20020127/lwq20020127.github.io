@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="The first approach enabling both scene- and object-level motion control for accurate, high-quality omnidirectional image-to-video generation.">
+
+    <title>OmniDrag: Enabling Motion Control for Omnidirectional Image-to-Video Generation</title>
+    <link rel="icon" href="./static/images/page.svg">
+
+    <!-- reset css  -->
+    <link href="./static/css/reset.css" rel="stylesheet" />
+
+    <link href="./static/css/index.css" rel="stylesheet" />
+
+    <script src="./static/js/index.js" defer></script>
+
+    <script src="./static/js/aframe.min.js" defer></script>
+
+</head>
+
+<body>
+    <header>
+        <h1 class="center">OmniDrag: Enabling Motion Control for Omnidirectional Image-to-Video Generation</h1>
+
+        <div class="center">
+            <p><a class="author" href="https://scholar.google.com/citations?user=SIkQdEsAAAAJ&hl=en">Weiqi Li</a>, Shijie Zhao, Chong Mou, Xuhan Sheng, Zhenyu Zhang,</p> 
+            <p>Qian Wang, Junlin Li, Li Zhang, <a class="author" href="https://jianzhang.tech/">Jian Zhang</a></p>
+            <p>School of Electronic and Computer Engineering, Peking University</p>
+            <p>ByteDance Inc.</p>
+        </div>
+    </header>
+
+    <div class="links">
+        <a href="" class="link">
+            <svg class="link-img" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 384 512">
+                <path fill="currentColor"
+                    d="M181.9 256.1c-5-16-4.9-46.9-2-46.9 8.4 0 7.6 36.9 2 46.9zm-1.7 47.2c-7.7 20.2-17.3 43.3-28.4 62.7 18.3-7 39-17.2 62.9-21.9-12.7-9.6-24.9-23.4-34.5-40.8zM86.1 428.1c0 .8 13.2-5.4 34.9-40.2-6.7 6.3-29.1 24.5-34.9 40.2zM248 160h136v328c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V24C0 10.7 10.7 0 24 0h200v136c0 13.2 10.8 24 24 24zm-8 171.8c-20-12.2-33.3-29-42.7-53.8 4.5-18.5 11.6-46.6 6.2-64.2-4.7-29.4-42.4-26.5-47.8-6.8-5 18.3-.4 44.1 8.1 77-11.6 27.6-28.7 64.6-40.8 85.8-.1 0-.1.1-.2.1-27.1 13.9-73.6 44.5-54.5 68 5.6 6.9 16 10 21.5 10 17.9 0 35.7-18 61.1-61.8 25.8-8.5 54.1-19.1 79-23.2 21.7 11.8 47.1 19.5 64 19.5 29.2 0 31.2-32 19.7-43.4-13.9-13.6-54.3-9.7-73.6-7.2zM377 105L279 7c-4.5-4.5-10.6-7-17-7h-6v128h128v-6.1c0-6.3-2.5-12.4-7-16.9zm-74.1 255.3c4.1-2.7-2.5-11.9-42.8-9 37.1 15.8 42.8 9 42.8 9z">
+                </path>
+            </svg>
+            Paper
+        </a>
+        <a href="" class="link">
+            <svg class="link-img" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 496 512">
+                <path fill="currentColor"
+                    d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z">
+                </path>
+            </svg>
+            Code
+        </a>
+
+    </div>
+
+    <section>
+        <h2>Abstract</h2>
+        <p class="abstract">
+            As virtual reality gains popularity, the demand for controllable creation of immersive and dynamic omnidirectional videos (ODVs) is increasing. 
+            While previous text-to-ODV generation methods achieve impressive results, they struggle with content inaccuracies and inconsistencies due to reliance solely on textual inputs. 
+            Although recent motion control techniques provide fine-grained control for video generation, directly applying these methods to ODVs often results in spatial distortion and unsatisfactory performance, especially with complex spherical motions. 
+            To tackle these challenges, we propose OmniDrag, the first approach enabling both scene- and object-level motion control for accurate, high-quality omnidirectional image-to-video generation. 
+            Building on pretrained video diffusion models, we introduce an omnidirectional control module, which is jointly fine-tuned with temporal attention layers to effectively handle complex spherical motion. 
+            In addition, we develop a novel spherical motion estimator that accurately extracts motion-control signals and allows users to perform drag-style ODV generation by simply drawing handle and target points. 
+            We also present a new dataset, named Move360, addressing the scarcity of ODV data with large scene and object motions. 
+            Experiments demonstrate the significant superiority of OmniDrag in achieving holistic scene-level and fine-grained object-level control for ODV generation. 
+            Our code, models, and collected dataset will be made available.
+        </p>
+    </section>
+
+    <section>
+        <h2>Method</h2>
+        <img src="./static/images/framework.webp" alt="framework">
+        <p>
+            <b>Overall pipeline of proposed OmniDrag.</b> (a) During training, spherical motion is extracted by the proposed spherical motion estimator. 
+            The Omni Controller and temporal attention layers in the UNet denoiser are jointly fine-tuned. 
+            (b) During inference, OmniDrag allows users to simply select handle and target points on the reference image and generates ODVs with the corresponding motion.
+        </p>
+    </section>
+
+    <section>
+        <h2>Samples of Move360 Dataset</h2>
+        <div class="show gallery">
+            <div class="video">
+                <video playsinline autoplay loop muted>
+                    <source data-src="./static/videos/VID_000.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video">
+                <video playsinline autoplay loop muted>
+                    <source data-src="./static/videos/VID_001.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video">
+                <video playsinline autoplay loop muted>
+                    <source data-src="./static/videos/VID_002.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video">
+                <video playsinline autoplay loop muted>
+                    <source data-src="./static/videos/VID_003.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video">
+                <video playsinline autoplay loop muted>
+                    <source data-src="./static/videos/VID_004.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video">
+                <video playsinline autoplay loop muted>
+                    <source data-src="./static/videos/VID_005.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video">
+                <video playsinline autoplay loop muted>
+                    <source data-src="./static/videos/VID_006.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video">
+                <video playsinline autoplay loop muted>
+                    <source data-src="./static/videos/VID_007.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Scene-Level Motion Control</h2>
+        <div class="scroll-area" style="overflow-x: auto;">
+            <div class="show scene-level">
+                <div class="center" style="color:#00F;">
+                    <b>User Input</b>
+                </div>
+                <div class="center">
+                    <p>DragAnything</p>
+                </div>
+                <div class="center">
+                    <p>DragNUWA</p>
+                </div>
+                <div class="center">
+                    <b>OmniDrag (Ours)</b>
+                </div>
+                
+                <div style="margin-right: 5px;">
+                    <img src="./static/videos/Scene-Level/ODI_010/start_end_erp.png">
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_010/DragAnything/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_010/DragNUWA/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_010/Ours/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="viewport">
+                    <b>Viewports: </b>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010/DragAnything/pers_-30_290.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010/DragAnything/pers_0_0.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010/DragNUWA/pers_-30_290.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010/DragNUWA/pers_0_0.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010/Ours/pers_-30_290.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010/Ours/pers_0_0.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+
+                <div style="margin-right: 5px;">
+                    <img src="./static/videos/Scene-Level/ODI_010_rev/start_end_erp.png">
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_010_rev/DragAnything/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_010_rev/DragNUWA/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_010_rev/Ours/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="viewport">
+                    <b>Viewports: </b>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010_rev/DragAnything/pers_0_315.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010_rev/DragAnything/pers_0_0.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010_rev/DragNUWA/pers_0_315.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010_rev/DragNUWA/pers_0_0.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010_rev/Ours/pers_0_315.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_010_rev/Ours/pers_0_0.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                
+                <div style="margin-right: 5px;">
+                    <img src="./static/videos/Scene-Level/ODI_280/start_end_erp.png">
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_280/DragAnything/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_280/DragNUWA/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_280/Ours/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="viewport">
+                    <b>Viewports: </b>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280/DragAnything/pers_0_90.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280/DragAnything/pers_0_270.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280/DragNUWA/pers_0_90.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280/DragNUWA/pers_0_270.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280/Ours/pers_0_90.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280/Ours/pers_0_270.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+
+                <div style="margin-right: 5px;">
+                    <img src="./static/videos/Scene-Level/ODI_280_rev/start_end_erp.png">
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_280_rev/DragAnything/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_280_rev/DragNUWA/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Scene-Level/ODI_280_rev/Ours/ERP.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="viewport">
+                    <b>Viewports: </b>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280_rev/DragAnything/pers_0_90.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280_rev/DragAnything/pers_0_270.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280_rev/DragNUWA/pers_0_90.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280_rev/DragNUWA/pers_0_270.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="pers-video">
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280_rev/Ours/pers_0_90.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="video">
+                        <video playsinline autoplay loop muted>
+                            <source data-src="./static/videos/Scene-Level/ODI_280_rev/Ours/pers_0_270.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Object-Level Motion Control</h2>
+        <div class="scroll-area" style="overflow-x: auto;">
+            <div class="show object-level">
+                <div class="center" style="color: #00F;">
+                    <b>User Input</b>
+                </div>
+                <div class="center">
+                    <p>DragAnything</p>
+                </div>
+                <div class="center">
+                    <p>DragNUWA</p>
+                </div>
+                <div class="center">
+                    <b>OmniDrag (Ours)</b>
+                </div>
+                
+                <div style="margin-right: 5px;">
+                    <img src="./static/videos/Object-Level/ODI_003_rev/start_end_erp.png">
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/ODI_003_rev/DragAnything.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/ODI_003_rev/DragNUWA.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/ODI_003_rev/Ours.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div style="margin-right: 5px;">
+                    <img src="./static/videos/Object-Level/ODI_009/start_end_erp.png">
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/ODI_009/DragAnything.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/ODI_009/DragNUWA.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/ODI_009/Ours.mp4" type="video/mp4">
+                    </video>
+                </div>
+                
+                <div style="margin-right: 5px;">
+                    <img src="./static/videos/Object-Level/ODI_019/start_end_erp.png">
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/ODI_019/DragAnything.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/ODI_019/DragNUWA.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/ODI_019/Ours.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div style="margin-right: 5px;">
+                    <img src="./static/videos/Object-Level/SUN_001/start_end_erp.png">
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/SUN_001/DragAnything.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/SUN_001/DragNUWA.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/SUN_001/Ours.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div style="margin-right: 5px;">
+                    <img src="./static/videos/Object-Level/SUN_001_rev/start_end_erp.png">
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/SUN_001_rev/DragAnything.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/SUN_001_rev/DragNUWA.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/SUN_001_rev/Ours.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div style="margin-right: 5px;">
+                    <img src="./static/videos/Object-Level/SUN_001_both/start_end_erp.png">
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/SUN_001_both/DragAnything.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/SUN_001_both/DragNUWA.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="video">
+                    <video playsinline autoplay loop muted>
+                        <source data-src="./static/videos/Object-Level/SUN_001_both/Ours.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>
