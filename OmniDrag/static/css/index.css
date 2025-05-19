@@ -179,6 +179,24 @@ section > p {
     grid-column: 2 / -1;
 }
 
+.ablation {
+    min-width: 600px;
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.ablation .full-line {
+    grid-column: 2 / -1;
+}
+
+.additional {
+    min-width: 600px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.additional .full-line {
+    grid-column: 2 / -1;
+}
+
 .gallery {
     grid-template-columns: repeat(4, 1fr);
 }
